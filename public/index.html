@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat APP</title>
+  <style>
+    body {
+      height: 100vh;
+      background-image: linear-gradient(rgb(255, 255, 255), rgb(109, 39, 239));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 500px;
+      border: 2px solid black;
+      border-radius: 20px;
+      padding: 30px;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-size: 36px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    #message {
+      width: calc(100% - 70px);
+      padding: 10px;
+      border: none;
+      border-radius: 20px 0 0 20px;
+      font-size: 18px;
+    }
+
+    #sendBtn {
+      width: 70px;
+      padding: 10px;
+      border: none;
+      border-radius: 0 20px 20px 0;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    #messages {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .message {
+      background-color: #f2f2f2;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to Voyage Tours</h1>
+    
+    <div id="messages"></div>
+
+    <div id="send-container">
+      <input type="text" id="message" placeholder="Enter Message" />
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const sendBtn = document.getElementById("sendBtn");
+    const messageInput = document.getElementById("message");
+    const allMessages = document.getElementById("messages");
+
+    socket.on("message", (message) => {
+      const p = document.createElement("p");
+      p.innerText = message;
+      p.classList.add("message");
+      allMessages.appendChild(p);
+    });
+
+    sendBtn.addEventListener("click", (e) => {
+      const message = messageInput.value;
+      console.log(message);
+      socket.emit("user-message", message);
+      messageInput.value = "";
+    });
+  </script>
+</body>
+</html>
